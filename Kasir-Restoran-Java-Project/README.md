@@ -24,18 +24,18 @@ Dalam pengembangan aplikasi ini, diterapkan beberapa konsep dasar pemrograman, a
 ## Struktur Program
 Struktur folder pada repository ini adalah sebagai berikut:
 
-Kasir-Restoran-Java-Project/
-├── KasirRestoran.java
-├── README.md
+`Kasir-Restoran-Java-Project/`
+`├── KasirRestoran.java`
+`├── README.md`
 
 ## Cara Menjalankan Program
 1. Pastikan **Java Development Kit (JDK)** sudah terpasang di komputer
 2. Buka terminal atau command prompt
 3. Masuk ke folder `Kasir-Restoran-Java-Project`
 4. Compile program dengan perintah:
-    javac KasirRestoran.java
+    `javac KasirRestoran.java`
 5. Jalankan program dengan perintah:
-    java KasirRestoran
+    `java KasirRestoran`
 
 ## Lingkungan Pengembangan
 - Bahasa Pemrograman : Java  
