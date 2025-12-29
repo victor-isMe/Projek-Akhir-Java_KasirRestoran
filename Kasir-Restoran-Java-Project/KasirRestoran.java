@@ -60,9 +60,9 @@ public class KasirRestoran {
 
             System.out.print("\nMasukkan pesanan customer(Input berupa angka) : ");
             pilih = input.nextInt();input.nextLine();
-            boolean status = statusMenu.get(pilih-1);
 
             if (pilih >= 1 && pilih <= menu.size()) {
+                boolean status = statusMenu.get(pilih-1);
                 if (status) {
                     System.out.print("Jumlah item : ");
                     int jumlah = input.nextInt();input.nextLine();
@@ -183,6 +183,7 @@ public class KasirRestoran {
                 System.out.println("Menu '"+menu.get(nomorMenu-1)+"' berhasil dihapus.");
                 menu.remove(nomorMenu-1);
                 hargaMenu.remove(nomorMenu-1);
+                statusMenu.remove(nomorMenu-1);
                 break;
             
             case 2:
