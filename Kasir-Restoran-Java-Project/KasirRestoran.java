@@ -42,7 +42,7 @@ class Pesanan {//Membuat class untuk menyimpan setiap informasi dari pesanan cus
 public class KasirRestoran {
 
     //Method untuk mencatat pesanan
-    public static void catatPesanan(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu, ArrayList<Pesanan> listPesanan, int setNextId[]) {
+    public static void catatPesanan(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu, ArrayList<Boolean> statusMenu, ArrayList<Pesanan> listPesanan, int setNextId[]) {
         System.out.print("\nNama pemesan : ");
         String namaPemesan = input.nextLine();
         int id = setNextId[0]; //Untuk memberikan id pada pesanan
@@ -56,20 +56,26 @@ public class KasirRestoran {
 
         //Perulangan do while untuk bisa menginputkan lebih dari satu menu pada pesanan
         do {
-            tampilkanMenuRestoran(menu, hargaMenu); //Memanggil method untuk menampilkan daftar menu
+            tampilkanMenuRestoran(menu, hargaMenu, statusMenu); //Memanggil method untuk menampilkan daftar menu
 
             System.out.print("\nMasukkan pesanan customer(Input berupa angka) : ");
             pilih = input.nextInt();input.nextLine();
+            boolean status = statusMenu.get(pilih-1);
 
             if (pilih >= 1 && pilih <= menu.size()) {
-                System.out.print("Jumlah item : ");
-                int jumlah = input.nextInt();input.nextLine();
+                if (status) {
+                    System.out.print("Jumlah item : ");
+                    int jumlah = input.nextInt();input.nextLine();
 
-                if (jumlah != 0) {
-                    newPesanan.pesanan.add(menu.get(pilih-1));
-                    newPesanan.hargaPesanan.add(hargaMenu.get(pilih-1));
-                    newPesanan.quantity.add(jumlah);
+                    if (jumlah != 0) {
+                        newPesanan.pesanan.add(menu.get(pilih-1));
+                        newPesanan.hargaPesanan.add(hargaMenu.get(pilih-1));
+                        newPesanan.quantity.add(jumlah);
+                    }
+                } else {
+                    System.out.println("Menu sedang tidak tersedia!");
                 }
+
             } else {
                 System.out.println("Mohon masukkan angka yang valid!!");
             }
@@ -99,14 +105,43 @@ public class KasirRestoran {
         }
     }
 
-    //Method untuk menampilkan daftar menu
-    public static void tampilkanMenuRestoran(ArrayList<String> daftarMenu, ArrayList<Integer> daftarHarga) {
+    //Method untuk menampilkan daftar menu v1
+    public static void tampilkanMenuRestoran(ArrayList<String> daftarMenu, ArrayList<Integer> daftarHarga, ArrayList<Boolean> statusMenu) {
         System.out.println("\nDaftar Menu Makanan&Minuman Restoran 'Dapur Nusantara'");
 
         for (int i=1;i<=daftarMenu.size();i++) {
-            System.out.println(i + ". " + daftarMenu.get(i-1) + " : Rp" + daftarHarga.get(i-1));
+            boolean status = statusMenu.get(i-1);
+            if (status) {
+                System.out.println(i + ". " + daftarMenu.get(i-1) + " : Rp" + daftarHarga.get(i-1));
+            } else {
+                System.out.println(i + ". " + daftarMenu.get(i-1) + " : Rp" + daftarHarga.get(i-1)+" [HABIS]");
+            }
         }
     }
+
+    
+    //Method untuk menampilkan daftar menu v2
+    // public static void tampilkanMenuRestoran(ArrayList<String> menu, ArrayList<Integer> hargaMenu) {
+    //     System.out.println("\nDaftar Menu Makanan/Minuman Restoran 'Dapur Nusantara'");
+
+    //     int kolom = 4;
+    //     int barisPerKolom = (int) Math.ceil((double) menu.size() / kolom);
+
+    //     for (int row = 0;row < barisPerKolom;row++) {
+    //         for (int col = 0;col < kolom;col++) {
+    //             int index = row + (col * barisPerKolom);
+
+    //             if (index < menu.size()) {
+    //                 System.out.printf(
+    //                         "%-3d %-18s Rp%-7d",
+    //                         index + 1,
+    //                         menu.get(index),
+    //                         hargaMenu.get(index));
+    //                     }
+    //         }
+    //         System.out.println();
+    //     }
+    // }
 
     //Method untuk menampilkan daftar listPesanan
     public static void tampilkanListPesanan(ArrayList<Pesanan> listPesanan) {
@@ -117,7 +152,7 @@ public class KasirRestoran {
     }
 
     //Method ubah/edit Menu Makanan/Minuman
-    public static void editMenu(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu) {
+    public static void editMenu(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu, ArrayList<Boolean> statusMenu) {
         System.out.println("\nEdit Menu Makanan&Minuman");
 
         if(menu.isEmpty()) {
@@ -125,7 +160,7 @@ public class KasirRestoran {
             return;
         }
 
-        tampilkanMenuRestoran(menu, hargaMenu);
+        tampilkanMenuRestoran(menu, hargaMenu, statusMenu);
 
         System.out.print("\nPilih menu yang ingin diubah(dalam angka) : ");
         int nomorMenu = input.nextInt();input.nextLine();
@@ -139,7 +174,8 @@ public class KasirRestoran {
         System.out.println("\n1. Hapus Menu");
         System.out.println("2. Ubah Nama");
         System.out.println("3. Ubah Harga");
-        System.out.print("Pilih(1-3) : ");
+        System.out.println("4. Nonaktifkan/Aktifkan Menu");
+        System.out.print("Pilih(1-4) : ");
         int pilihEdit = input.nextInt();input.nextLine();
 
         switch(pilihEdit) {
@@ -161,6 +197,16 @@ public class KasirRestoran {
                 int hargaBaru = input.nextInt();input.nextLine();
                 hargaMenu.set(nomorMenu-1, hargaBaru);
                 System.out.println("\nHarga Menu berhasil diubah!");
+                break;
+
+            case 4:
+                boolean status = statusMenu.get(nomorMenu-1);
+                statusMenu.set(nomorMenu-1, !status);
+                if (!status) {
+                    System.out.println("Menu berhasil diaktifkan!");
+                } else {
+                    System.out.println("Menu berhasil dinonaktifkan!");
+                }
                 break;
 
             default:
@@ -198,7 +244,7 @@ public class KasirRestoran {
     }
 
     //Method untuk tambah menu baru
-    public static void tambahkanMenuBaru(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu) {
+    public static void tambahkanMenuBaru(Scanner input, ArrayList<String> menu, ArrayList<Integer> hargaMenu, ArrayList<Boolean> statusMenu) {
 
         System.out.println("\nTambah Menu Makanan&Minuman");
 
@@ -209,6 +255,8 @@ public class KasirRestoran {
         System.out.print("Masukkan harga menu : ");
         int newHargaMenu = input.nextInt();input.nextLine();
         hargaMenu.add(newHargaMenu);
+
+        statusMenu.add(true);
                     
         System.out.println(newMenu + " telah berhasil ditambahkan ke dalam Menu Makanan.");
     }
@@ -306,6 +354,10 @@ public class KasirRestoran {
         //Membuat ArrayList dari List yang telah dibuat sebelumnya
         ArrayList<String> menu = new ArrayList<>(Arrays.asList(arrMenu));
         ArrayList<Integer> hargaMenu = new ArrayList<>(Arrays.asList(arrHargaMenu));
+        ArrayList<Boolean> statusMenu = new ArrayList<>();
+        for (int i=0; i<menu.size(); i++) {
+            statusMenu.add(true);
+        }
 
         //Menginisiasi variabel kondisi dengan nilai true
         kondisi = true;
@@ -332,25 +384,25 @@ public class KasirRestoran {
                 case 1: //Fitur menambahkan menu
 
                     //Memanggil method tambahkanMenuBaru()
-                    tambahkanMenuBaru(input, menu, hargaMenu);
+                    tambahkanMenuBaru(input, menu, hargaMenu, statusMenu);
                     break;
 
                 case 2: //Fitur untuk menampilkan semua menu beserta harganya
                 
                     //Memanggil method tampilkanMenuRestoran()
-                    tampilkanMenuRestoran(menu, hargaMenu);
+                    tampilkanMenuRestoran(menu, hargaMenu, statusMenu);
                     break;
 
                 case 3: //Fitur untuk edit/ubah menu makanan dan minuman
 
                     //Memanggil method editMenu()
-                    editMenu(input, menu, hargaMenu);
+                    editMenu(input, menu, hargaMenu, statusMenu);
                     break;
 
                 case 4: //Fitur mencatat pesanan customer
 
                     //Memanggil method catatPesanan()
-                    catatPesanan(input, menu, hargaMenu, listPesanan, setNextId);
+                    catatPesanan(input, menu, hargaMenu, statusMenu, listPesanan, setNextId);
                     break;
 
                 case 5: //Fitur untuk menampilkan status pesanan berdasarkan ID Pesanan
